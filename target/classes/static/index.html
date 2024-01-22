@@ -1,0 +1,73 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Dashboard</title>
+</head>
+<body>
+<h2>Submit Repair Request</h2>
+<form id="submitForm">
+    <label for="studentId">Student ID:</label>
+    <input type="text" id="studentId" name="studentId" required><br>
+
+    <label for="issueDescription">Issue Description:</label>
+    <textarea id="issueDescription" name="issueDescription" required></textarea><br>
+
+    <button type="button" onclick="submitRequest()">Submit</button>
+</form>
+
+<hr>
+
+<h2>Repair Requests</h2>
+<ul id="requestList"></ul>
+
+<script>
+    function submitRequest() {
+        var studentId = document.getElementById("studentId").value;
+        var issueDescription = document.getElementById("issueDescription").value;
+
+        var request = {
+            studentId: studentId,
+            issueDescription: issueDescription
+        };
+
+        fetch('/api/student/submit-request', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(request)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                loadRequests();
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function loadRequests() {
+        fetch('/api/student/get-requests')
+            .then(response => response.json())
+            .then(data => {
+                var requestList = document.getElementById("requestList");
+                requestList.innerHTML = '';
+
+                data.forEach(request => {
+                    var listItem = document.createElement("li");
+                    listItem.appendChild(document.createTextNode(
+                        'ID: ' + request.id + ', ' +
+                        'Student ID: ' + request.studentId + ', ' +
+                        'Status: ' + request.status
+                    ));
+                    requestList.appendChild(listItem);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    // 初始加载请求列表
+    loadRequests();
+</script>
+</body>
+</html>

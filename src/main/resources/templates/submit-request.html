@@ -1,0 +1,19 @@
+<!-- submit-request.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Submit Repair Request</title>
+</head>
+<body>
+<h2>Submit Repair Request</h2>
+<form action="/api/student/submit-request" method="post" th:object="${request}">
+    <label for="studentId">Student ID:</label>
+    <input type="text" id="studentId" name="studentId" th:field="*{studentId}" required><br>
+
+    <label for="issueDescription">Issue Description:</label>
+    <textarea id="issueDescription" name="issueDescription" th:field="*{issueDescription}" required></textarea><br>
+
+    <button type="submit">Submit</button>
+</form>
+</body>
+</html>
